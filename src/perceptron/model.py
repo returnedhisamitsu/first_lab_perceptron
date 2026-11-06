@@ -1,36 +1,28 @@
 """This module defines the Perceptron class, which can be trained
 on a dataset and evaluated using accuracy."""
 
+from math import isfinite
+
 
 class Perceptron:
     """A simple binary classification model."""
 
-    def __init__(self, n_features: int, learning_rate: float = 0.1, epochs: int = 1000):
+    def __init__(
+        self, n_features: int, learning_rate: float = 0.1, epochs: int = 1000
+    ) -> None:
         """Initialize the perceptron with the given parameters."""
-        if not isinstance(n_features, int):
-            raise TypeError(
-                "number of features must be integer"
-            )
-        if not isinstance(epochs, int):
-            raise TypeError(
-                "epochs must be an integer"
-            )
-        if not isinstance(learning_rate, (int, float)):
-            raise TypeError(
-                "learning rate must be an integer or float"
-            )
+        if type(n_features) is not int:
+            raise TypeError("number of features must be integer")
+        if type(epochs) is not int:
+            raise TypeError("epochs must be an integer")
+        if type(learning_rate) not in (int, float):
+            raise TypeError("learning rate must be an integer or float")
         if n_features <= 0:
-            raise ValueError(
-                "number of features must be positive"
-            )
+            raise ValueError("number of features must be positive")
         if epochs <= 0:
-            raise ValueError(
-                "epochs must be positive"
-            )
-        if learning_rate <= 0.0:
-            raise ValueError(
-                "learning rate must be positive"
-            )
+            raise ValueError("epochs must be positive")
+        if learning_rate <= 0.0 or not isfinite(learning_rate):
+            raise ValueError("learning rate must be a positive finite number")
 
         self.n_features = n_features
         self.learning_rate = learning_rate
@@ -39,12 +31,22 @@ class Perceptron:
         self.bias = 0.0
         self.errors_per_epoch: list[int] = []
 
-    def predict(self, point: list[float]) -> int:
-        """Predict the class of a sample using the current weights and bias."""
+    def _validate_point(self, point: list[float]) -> None:
+        """Checks the validity of a point with respect to the number of features,
+        as well as the type and finiteness of each feature."""
         if len(point) != self.n_features:
             raise ValueError(
                 "Number of point features must match n_features in constructor"
             )
+        for feature in point:
+            if type(feature) not in (int, float):
+                raise TypeError("Feature must be an integer or float")
+            if not isfinite(feature):
+                raise ValueError("Feature must be a finite number")
+
+    def predict(self, point: list[float]) -> int:
+        """Predict the class of a sample using the current weights and bias."""
+        self._validate_point(point)
         z = self.bias
         for i in range(self.n_features):
             z += self.w[i] * point[i]
@@ -65,27 +67,18 @@ class Perceptron:
     def train(self, X: list[list[float]], y: list[int]) -> None:
         """Train the perceptron using the provided labeled dataset."""
         if not X:
-            raise ValueError(
-                "Can't train perceptron without points"
-            )
+            raise ValueError("Can't train perceptron without points")
         if not y:
-            raise ValueError(
-                "Can't train perceptron without targets"
-            )
+            raise ValueError("Can't train perceptron without targets")
         if len(X) != len(y):
-            raise ValueError(
-                "Number of points must match number of targets"
-            )
+            raise ValueError("Number of points must match number of targets")
         for target in y:
-            if target not in {0, 1}:
-                raise ValueError(
-                    "Target values must be either 0 or 1"
-                )
+            if type(target) is not int:
+                raise TypeError("Target values must be integer")
+            if target not in (0, 1):
+                raise ValueError("Target values must be either 0 or 1")
         for point in X:
-            if len(point) != self.n_features:
-                raise ValueError(
-                    "Number of point features must match n_features in constructor"
-                )
+            self._validate_point(point)
 
         self.errors_per_epoch = []
         for _ in range(self.epochs):
@@ -104,27 +97,19 @@ class Perceptron:
     def score(self, X: list[list[float]], y: list[int]) -> float:
         """Calculate the accuracy of the model on the given dataset."""
         if not X:
-            raise ValueError(
-                "Cannot calculate accuracy on an empty dataset"
-            )
+            raise ValueError("Cannot calculate accuracy on an empty dataset")
         if not y:
-            raise ValueError(
-                "Can't calculate score of current model without targets"
-            )
+            raise ValueError("Can't calculate score of current model without targets")
         if len(X) != len(y):
-            raise ValueError(
-                "Number of points must match number of targets"
-            )
+            raise ValueError("Number of points must match number of targets")
         for target in y:
-            if target not in {0, 1}:
-                raise ValueError(
-                    "Target values must be either 0 or 1"
-                )
+            if type(target) is not int:
+                raise TypeError("Target values must be integer")
+            if target not in (0, 1):
+                raise ValueError("Target values must be either 0 or 1")
         for point in X:
-            if len(point) != self.n_features:
-                raise ValueError(
-                    "Number of point features must match n_features in constructor"
-                )
+            self._validate_point(point)
+
         correct = 0
         number_of_tests = len(X)
         for point, target in zip(X, y):
