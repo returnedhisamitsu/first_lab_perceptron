@@ -15,7 +15,7 @@
 ## Установка
 
 ```bash
-git clone <repository-url>
+git clone <https://github.com/returnedhisamitsu/first_lab_perceptron>
 cd perceptron
 uv sync
 ```
