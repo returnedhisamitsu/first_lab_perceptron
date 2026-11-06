@@ -10,6 +10,21 @@ def test_generate_dataset() -> None:
     with pytest.raises(ValueError):
         generate_dataset(1)
 
+    with pytest.raises(TypeError):
+        generate_dataset(100, sigma="0.5")  # type: ignore[arg-type]
+
+    with pytest.raises(ValueError):
+        generate_dataset(100, sigma=0)
+
+    with pytest.raises(ValueError):
+        generate_dataset(100, sigma=-1)
+
+    with pytest.raises(ValueError):
+        generate_dataset(100, sigma=float("inf"))
+
+    with pytest.raises(ValueError):
+        generate_dataset(100, sigma=float("nan"))
+
     X, y = generate_dataset(201, 42)
     assert len(X) == 201
     assert len(y) == 201
@@ -17,7 +32,7 @@ def test_generate_dataset() -> None:
     assert y.count(1) == 101
 
 
-def test_generate_dataset_reproducibility() -> None:
+def test_dataset_reproducibility() -> None:
     X1, y1 = generate_dataset(200, 42)
     X2, y2 = generate_dataset(200, 42)
 
@@ -25,7 +40,7 @@ def test_generate_dataset_reproducibility() -> None:
     assert y1 == y2
 
 
-def test_generate_dataset_separation() -> None:
+def test_dataset_separation() -> None:
     X, y = generate_dataset(200, 42)
 
     for point, target in zip(X, y):
