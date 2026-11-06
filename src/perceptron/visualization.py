@@ -2,7 +2,7 @@ import math
 
 import matplotlib.pyplot as plt
 
-from perceptron import Perceptron, generate_dataset
+from perceptron import Perceptron
 
 
 def plot_dataset(X: list[list[float]], y: list[int], model: Perceptron) -> None:
@@ -106,15 +106,3 @@ def plot_errors(errors_per_epoch: list[int]) -> None:
     plt.title("Training errors per epoch")
     plt.grid(True)
     plt.show()
-
-
-if __name__ == "__main__":
-    X, y = generate_dataset(200, 32, 2)
-    model = Perceptron(2)
-    model.train(X, y)
-
-    print("Weights:", model.w)
-    print("Bias:", model.bias)
-
-    plot_dataset(X, y, model)
-    plot_errors(model.errors_per_epoch)
