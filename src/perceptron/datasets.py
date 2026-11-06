@@ -1,6 +1,8 @@
 import math
 import random
 
+from sklearn.datasets import load_iris  # type: ignore[import-untyped]
+
 
 def generate_dataset(
     samples: int, seed: int | None = None, sigma: float = 0.5
@@ -49,4 +51,18 @@ def generate_dataset(
     rng.shuffle(dataset)
     X = [point for point, target in dataset]
     y = [target for point, target in dataset]
+    return X, y
+
+
+def load_iris_dataset() -> tuple[list[list[float]], list[int]]:
+    """Load Iris dataset for binary classification using two features."""
+    iris = load_iris()
+    X: list[list[float]] = []
+    y: list[int] = []
+
+    for features, target in zip(iris.data, iris.target):
+        if target in (0, 1):
+            X.append([float(features[2]), float(features[3])])
+            y.append(int(target))
+
     return X, y

@@ -1,6 +1,7 @@
 from collections.abc import Iterator
 
 import matplotlib
+import numpy as np
 
 matplotlib.use("Agg")
 
@@ -84,8 +85,8 @@ def test_plot_errors() -> None:
 
     line = plt.gca().lines[0]
 
-    assert list(line.get_xdata()) == [1, 2, 3, 4]
-    assert list(line.get_ydata()) == errors
+    assert np.asarray(line.get_xdata()).tolist() == [1, 2, 3, 4]
+    assert np.asarray(line.get_ydata()).tolist() == errors
 
 
 def test_plot_errors_empty() -> None:

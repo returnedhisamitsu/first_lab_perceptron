@@ -1,6 +1,6 @@
 import pytest
 
-from perceptron import generate_dataset
+from perceptron import generate_dataset, load_iris_dataset
 
 
 def test_generate_dataset() -> None:
@@ -50,3 +50,23 @@ def test_dataset_separation() -> None:
             assert s < 0
         else:
             assert s >= 0
+
+
+def test_load_iris_dataset() -> None:
+    X, y = load_iris_dataset()
+
+    assert len(X) == 100
+    assert len(y) == 100
+
+    assert y.count(0) == 50
+    assert y.count(1) == 50
+
+    assert all(len(point) == 2 for point in X)
+
+
+def test_load_iris_dataset_values() -> None:
+    X, y = load_iris_dataset()
+
+    assert all(isinstance(value, float) for point in X for value in point)
+
+    assert set(y) == {0, 1}
