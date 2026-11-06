@@ -1,3 +1,9 @@
+"""Visualization utilities for the Perceptron model.
+
+Provides functions for plotting datasets with decision boundaries
+and visualizing training errors across epochs.
+"""
+
 import math
 
 import matplotlib.pyplot as plt

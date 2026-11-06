@@ -1,3 +1,9 @@
+"""Dataset generation and loading utilities.
+
+Provides functions for generating synthetic linearly separable
+datasets and loading the Iris dataset for binary classification.
+"""
+
 import math
 import random
 

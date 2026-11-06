@@ -1,3 +1,9 @@
+"""Perceptron package.
+
+Provides the Perceptron model, dataset generation utilities,
+Iris dataset loading, and visualization functions.
+"""
+
 from .datasets import generate_dataset, load_iris_dataset
 from .model import Perceptron
 from .visualization import plot_dataset, plot_errors
